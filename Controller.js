@@ -152,13 +152,19 @@ app.get('/ofertapedidos', async(req,res)=>{
 });
 
 app.put('/atualizaservico', async (req, res)=>{
-    await servico.findByPk(1)
-    .then(serv =>{
-         serv.nome ='HTML/CSS/JS';
-         serv.descricao= 'Paginas estaticas e dinamicas estilizadas';
-         serv.save();
-        return res.json({serv});
-    });
+    await servico.update(req.body,{
+        where: {id: req.body.id}
+    }).then(function(){
+       return  res.json({
+            error: false,
+            message: "serviço foi alterado com sucesso!"
+        }).catch(function(erro){
+           return  res.status(400).json({
+               error: true,
+               message: "erro na alteração do serviço" 
+           })
+        });
+    })
 });
 
 let port= process.env.PORT || 3003;
