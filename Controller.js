@@ -127,7 +127,7 @@ app.get('/servicos/:id', async(req,res)=>{
 })
 app.get('/listaclientes', async(req, res)=>{
     await cliente.findAll({
-        order:[['clienteDesde', 'DESC']]
+        order:[['id', 'ASC']]
     }).then(function(clientes){
         res.json({clientes})
     });
@@ -209,6 +209,21 @@ app.put('/pedidos/:id/editaritem', async (req,res)=>{
     })
 })
 
+app.get('/excluirCliente/:id', async(req,res)=>{
+    await cliente.destroy({
+        where: {id: req.params.id}
+    }).then(function(){
+        return res.json({
+            error: false,
+            message: "Cliente excluido com sucesso!"
+        })
+}).catch(function(erro){
+    return res.status(400).json({
+        error: true,
+        message:"Erro ao excluir cliente!"
+    })
+})
+})
 
 
 let port= process.env.PORT || 3003;
