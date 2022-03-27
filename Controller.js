@@ -12,6 +12,9 @@ let cliente = models.Cliente;
 let pedido = models.Pedido;
 let itempedido= models.ItemPedido;
 let servico = models.Servico;
+let compra = models.Compra;
+let produto = models.Produto;
+let itemproduto = models.ItemProduto;
 
 app.get('/', function(req, res){
     res.send("Olá Mundo!")
