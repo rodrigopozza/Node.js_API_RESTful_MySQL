@@ -208,7 +208,7 @@ app.get('/ofertaclientes', async(req,res)=>{
     })
 });
 // ----------------------------------------------------------------------------------
-app.get('/listapedidos', async(req, res)=>{
+app.get('/listaItempedidos', async(req, res)=>{
     await itempedido.findAll({
         order:[['valor', 'ASC']]
     }).then(function(pedidos){
@@ -216,13 +216,21 @@ app.get('/listapedidos', async(req, res)=>{
     });
 });
 // --------------------------------------------------------------------------------------
+app.get('/listapedidos', async(req, res)=>{
+    await pedido.findAll({
+        order:[['dataPedido', 'ASC']]
+    }).then(function(pedidos){
+        res.json({pedidos})
+    });
+});
+// -----------------------------------------------------------------------------------
 app.get('/ofertapedidos', async(req,res)=>{
     await pedido.count('id').then(function(pedidos){
         res.json({pedidos});
     })
 });
 // ----------------------------------------------------------------------------------
-app.get('/listacompras', async(req, res)=>{
+app.get('/listaitemproduto', async(req, res)=>{
     await itemproduto.findAll({
         order:[['valor', 'ASC']]
     }).then(function(compras){
@@ -230,6 +238,14 @@ app.get('/listacompras', async(req, res)=>{
     });
 });
 // -----------------------------------------------------------------------------------
+app.get('/listacompra', async(req, res)=>{
+    await compra.findAll({
+        order:[['data', 'ASC']]
+    }).then(function(compras){
+        res.json({compras})
+    });
+});
+// ----------------------------------------------
 app.get('/ofertacompras', async(req,res)=>{
     await compra.count('id').then(function(compras){
         res.json({compras});
@@ -485,8 +501,67 @@ app.get('/excluirPedido/:id', async(req,res)=>{
 })
 })
 // --------------------------------------------------------------------------------------------
-
-
+app.get('/compras/:id/excluirItem', async (req,res)=>{
+    
+    if(! await compra.findByPk(req.params.id)){
+        return res.status(400).json({
+            error : true,
+            message: "Compra não foi encontrado!"
+        })
+    }
+    if(! await produto.findByPk(req.body.ProdutoId)){
+        return res.status(400).json({
+            error : true,
+            message: "Produto nao foi encontrado!"
+        })
+    }
+    await itemproduto.destroy({
+        where: Sequelize.and({ProdutoId: req.body.ProdutoId},
+            {CompraId: req.params.id})
+    }).then(function(){
+        return res.json({
+            error: false,
+            message: " Item foi excluido com sucesso!",
+            
+        })
+    }).catch(function(erro){
+        return res.status(400).json({
+            error: true,
+            message: "Não foi possivel excluir!"
+        })
+    })
+})
+// ------------------------------------------------------------------------------------
+app.put('/pedidos/:id/excluirItem', async (req,res)=>{
+    if(! await pedido.findByPk(req.params.id)){
+        return res.status(400).json({
+            error : true,
+            message: "Pedido não foi encontrado!"
+        })
+    }
+    if(! await servico.findByPk(req.body.ServicoId)){
+        return res.status(400).json({
+            error : true,
+            message: "Serviço nao foi encontrado!"
+        })
+    }
+    await itempedido.destroy({
+        where: Sequelize.and({ServicoId: req.body.ServicoId},
+            {PedidoId: req.params.id})
+    }).then(function(itens){
+        return res.json({
+            error: false,
+            message: " item Pedido foi alterado com sucesso!",
+            
+        })
+    }).catch(function(erro){
+        return res.status(400).json({
+            error: true,
+            message: "Não foi possivel excluir!"
+        })
+    })
+})
+// ---------------------------------------------------------------------------------
 let port= process.env.PORT || 3003;
 
 app.listen(port, (req, res)=>{
