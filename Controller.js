@@ -298,7 +298,38 @@ app.put('/atualizacliente', async (req, res)=>{
     })
 });
 // -----------------------------------------------------------------------------------
-
+app.put('/atualizacompra', async (req, res)=>{
+    await compra.update(req.body,{
+        where: {id: req.body.id}
+    }).then(function(){
+       return  res.json({
+            error: false,
+            message: "compra foi alterada com sucesso!"
+        }).catch(function(erro){
+           return  res.status(400).json({
+               error: true,
+               message: "erro na alteração do compra" 
+           });
+        });
+    })
+});
+// ---------------------------------------------------------------------------------
+app.put('/atualizapedidos', async (req, res)=>{
+    await pedido.update(req.body,{
+        where: {id: req.body.id}
+    }).then(function(){
+       return  res.json({
+            error: false,
+            message: "pedidos foi alterada com sucesso!"
+        }).catch(function(erro){
+           return  res.status(400).json({
+               error: true,
+               message: "erro na alteração do  pedido" 
+           });
+        });
+    })
+});
+// --------------------------------------------------------------------------
 app.get('/pedidos/:id', async(req,res)=>{
     await pedido.findByPk(req.params.id, {include:[{all:true}]})
     .then(ped=>{
@@ -454,6 +485,7 @@ app.get('/excluirPedido/:id', async(req,res)=>{
 })
 })
 // --------------------------------------------------------------------------------------------
+
 
 let port= process.env.PORT || 3003;
 
