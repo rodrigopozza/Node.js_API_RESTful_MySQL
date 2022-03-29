@@ -548,7 +548,7 @@ app.put('/pedidos/:id/excluirItem', async (req,res)=>{
     await itempedido.destroy({
         where: Sequelize.and({ServicoId: req.body.ServicoId},
             {PedidoId: req.params.id})
-    }).then(function(itens){
+    }).then(function(){
         return res.json({
             error: false,
             message: " item Pedido foi alterado com sucesso!",
