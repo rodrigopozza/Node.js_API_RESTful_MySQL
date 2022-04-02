@@ -194,6 +194,22 @@ app.get('/servicos/:id', async (req, res) => {
         })
 })
 
+app.get('/servicos/:id/pedidos', async (req, res) => {
+    await itempedido.findAll({
+        where: {ServicoId: req.params.id}})
+        .then(item => {
+            return res.json({
+                error: false,
+                item
+            }).catch(function (erro) {
+                return res.status(400).json({
+                    error: true,
+                    message: "Erro: não foi possivel conectar!"
+                });
+            });
+        });
+})
+
 app.get('/listaclientes', async (req, res) => {
     await cliente.findAll({
         order: [['nome', 'ASC']]
