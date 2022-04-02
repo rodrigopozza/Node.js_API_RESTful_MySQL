@@ -162,7 +162,7 @@ app.post('/itemprodutos', async (req, res) => {
 
         });
     });
-})
+});
 
 app.get('/listaservicos', async (req, res) => {
     await servico.findAll({
@@ -208,7 +208,7 @@ app.get('/servicos/:id/pedidos', async (req, res) => {
                 });
             });
         });
-})
+});
 
 app.get('/listaclientes', async (req, res) => {
     await cliente.findAll({
